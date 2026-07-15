@@ -1,0 +1,35 @@
+{:itonami.blueprint/id "cloud-itonami-isic-2393"
+ :itonami.blueprint/name "Manufacture of other porcelain and ceramic products"
+ :itonami.blueprint/isic-rev5 "2393"
+ :itonami.blueprint/domain :porcelain-ceramic-products/manufacturing
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:worker-safety :materials-safety :resource-efficiency]
+ :itonami.blueprint/governor :porcelain-ceramic-plant-operations-governor
+ :itonami.blueprint/robotics true
+ :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger :cae]
+ :itonami.blueprint/status :public-oss
+ :itonami.blueprint/maturity :implemented
+ :itonami.blueprint/implemented-slice
+ "PorcelainAdvisor ⊣ Porcelain/Ceramic Plant Operations Governor, langgraph-clj
+ StateGraph, append-only audit ledger. A plant OPERATIONS COORDINATION
+ actor for porcelain/ceramic-products (tableware, decorative ceramics,
+ technical/industrial ceramics) plants (raw-material (kaolin/feldspar/
+ quartz) forming (jiggering/jolleying/RAM-pressing/slip-casting) ->
+ glazing -> kiln-firing -> inspection production line) -- not direct
+ forming-line/kiln-line-equipment control authority. Four ops
+ (`:log-production-batch` / `:schedule-maintenance` /
+ `:flag-safety-concern` / `:coordinate-shipment`), all `:effect
+ :propose` only. Eleven concrete governor checks elaborate this
+ blueprint's four HARD invariants: propose-only effect, closed op
+ allowlist, closed proposal-effect allowlist (no direct forming/kiln-
+ line-equipment control), permanent forming/kiln-line-actuate block,
+ independent equipment verification/registration before maintenance
+ scheduling, independent batch verification/registration before
+ shipment coordination, independent shipment-weight recompute against
+ the batch's own logged weight, double-schedule guard, product-type
+ validation, glaze-defect-rate plausibility validation, and
+ chip-resistance plausibility validation. Safety-concern flagging
+ (kiln-safety/glaze-material-safety -- lead-free glaze compliance)
+ ALWAYS escalates to a human plant supervisor; `:log-production-batch`
+ is the only op eligible to auto-commit, and only at phase 3 when
+ governor-clean."}
