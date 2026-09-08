@@ -44,7 +44,7 @@
   were compromised."
   (:require #?(:clj  [clojure.edn :as edn]
                :cljs [cljs.reader :as edn])
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [porcelainmfg.registry :as registry]
             [porcelainmfg.store :as store]
             [langchain.model :as model]))
