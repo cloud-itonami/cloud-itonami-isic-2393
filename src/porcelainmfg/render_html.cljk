@@ -30,7 +30,7 @@
   has quietly stopped producing HARD holds is a broken demo, and it fails
   the build instead of publishing a page that only ever shows green.
 
-  Usage: `clojure -M:dev:render-html [out-file]`
+  Usage: `kbb -M:dev:render-html [out-file]`
   (default `docs/samples/operator-console.html`)."
   (:require [clojure.java.io :as io]
             [kotoba.lang.text :as str]
@@ -54,7 +54,7 @@
   stopped escalating cannot be dressed up as an approved commit.
 
   Requests are taken from this repo's own `porcelainmfg.sim` demo driver
-  (`clojure -M:dev:run`), whose ids match `porcelainmfg.store`'s seeded
+  (`kbb -M:dev:run`), whose ids match `porcelainmfg.store`'s seeded
   `batch-001`..`batch-003` / `kiln-001` / `form-002` directory -- verified
   by running it BEFORE writing this file. Four clean paths (one phase-3
   auto-commit plus three human-approved commits) and ten HARD holds, one
@@ -406,7 +406,7 @@
      (section
       "This page"
       (str "Generated at build time by <code>porcelainmfg.render-html</code> "
-           "(<code>clojure -M:dev:render-html</code>) by compiling the real "
+           "(<code>kbb -M:dev:render-html</code>) by compiling the real "
            "<code>porcelainmfg.operation</code> langgraph actor over a freshly seeded "
            "<code>porcelainmfg.store</code> and running "
            (count runs) " coordination requests through it. Every id, number, verdict, "
