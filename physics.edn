@@ -1,0 +1,43 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; The README has no "Robotics premise" section; its Scope names the plant
+;; this actor coordinates (ISIC 2393): preparing kaolin/feldspar/quartz/ball
+;; clay, forming (jiggering, RAM pressing, slip casting), glazing, bisque
+;; and glost firing, and inspection. The physical work of that plant taken
+;; here: draining the surplus slip out of a drain-cast mould, soaking glazed
+;; ware to peak temperature in a roller kiln, and stacking plates onto kiln
+;; batts.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-2393"
+ :cases
+ [{:id :drain-cast-mould
+   :kind :tank-drain
+   :procedure "after the wall has built up, the robot opens the drain of a plaster mould and lets the surplus slip run out from 0.40 m to 0.02 m"
+   :params {:tank-area-m2 0.12 :h0-m 0.40 :h-target-m 0.02 :cd 0.60 :dt-s 0.1 :max-time-s 3600.0}
+   :sweep {:param :orifice-area-m2 :values [0.0002 0.0003 0.0005 0.0008 0.0012]}
+   :quantity :time-to-target-s
+   :limit {:max 180.0 :basis "estimate: the drained cast must not keep building wall for more than 3 minutes after the drain is opened"}
+   :boundary {:lo 0.0001 :hi 0.003}}
+  {:id :glost-soak
+   :kind :thermal
+   :procedure "glazed porcelain ware enters the roller kiln's firing zone at 1000 C (1250 C zone, radiation lumped into the surface coefficient): time for its mid-plane to reach 1220 C (half thickness, mid-plane adiabatic)"
+   :params {:thickness-m 0.003 :conductivity-w-mk 1.5 :density-kg-m3 2400.0 :specific-heat-j-kgk 1050.0
+            :t0-c 1000.0 :t-hot-c 1250.0 :h-front-w-m2k 150.0 :h-back-w-m2k 0.0
+            :threshold-c 1220.0 :duration-s 7200.0 :nodes 7}
+   :sweep {:param :thickness-m :values [0.002 0.003 0.005 0.008 0.012]}
+   :quantity :time-to-threshold-s
+   :limit {:max 900.0 :basis "estimate: ware spends about 15 minutes in the firing zone of a fast roller kiln"}
+   :boundary {:lo 0.001 :hi 0.03}}
+  {:id :plate-stacking
+   :kind :manipulator
+   :procedure "arm lifts a short stack of glazed plates from the glazing line onto a kiln batt"
+   :params {:l1-m 0.45 :l2-m 0.40 :m1-kg 5.0 :m2-kg 3.5
+            :from [0.55 0.10] :to [0.25 0.45] :duration-s 2.0 :steps 400}
+   :sweep {:param :payload-kg :values [0.6 1.2 2.4 3.6 5.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 60.0 :basis "estimate: continuous shoulder torque of a ~5 kg-payload collaborative arm class"}
+   :boundary {:lo 0.1 :hi 30.0}}]}
